@@ -33,7 +33,13 @@
 				<div class ="span10 offset1">
 					<div class="divContent">
 	<ol>
-    <b><li>How to change your login password?</li></b>
+    <b><li>How to register as a teacher?</li></b>
+		Please contact us personally with the contact numbers provided in the contact us page. 
+		We will create your account after that and you will be a registered user as a teacher.</br></br>
+	
+	
+	
+	<b><li>How to change your login password?</li></b>
 		Please login with the existing password and follow the following steps:
 		Login -> My Profile -> Settings -> Change Password
 		Logout and then again login with new password.</br></br>
@@ -43,7 +49,7 @@
 		Only a teacher can add students under them. </br></br>
 
 	<b><li>Why I am not able to view molecular structures of compound?</li></b>
-		Jmol plugin should be installed.</br></br>
+		Ensure that JDK is installed and Java security is set to minimum in java controlpanel.</br></br>
 
 	<b><li>What if I don't have a teacher? Can I still use all the features of the website?</li></b>
 		No only a few features are only accessible to guest user.</br></br>
@@ -76,10 +82,11 @@
 	<b><li>How to take Quiz?</li></b>
 		This is for teacher's purpose only.
 		To upload Login -> My Profile -> Quizzes
-		Add details about the quiz with secret quiz code and submit the quiz.
+		Add details about the quiz and submit the quiz.
 		Now edit the quiz to add questions to the current quiz.</br></br>
 
 	<b>	<li>How to access quizzes and assignment?</li></b>
+			Click on my profile and select quiz or assignemnt. It will redirect to you directly to that page.
 		</br></br>
 
 	<b><li>How to take attendance?</li></b>

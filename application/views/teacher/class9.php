@@ -15,6 +15,8 @@
     <link href="<?php echo base_url('assests/css/font-awesome-ie7.css'); ?> "rel="stylesheet">
     <!-- Bootbusiness theme -->
     <link href="<?php echo base_url('assests/css/boot-business.css');?>" rel="stylesheet">
+	
+  
   </head>
   <body>
     <!-- Start: HEADER -->
@@ -22,7 +24,7 @@
     <!-- End: HEADER -->
     <!-- Start: MAIN CONTENT -->
     <div class="content">
- 
+	
     <div class="container">
           <div class="page-header">
            <center> <h1> Class 9 Topics </h1></center>
@@ -31,7 +33,17 @@
           <p>
            <a href="<?php echo base_url();?>teacher/addNewTopic"> <button class="btn btn-danger"> Add New Topic</button>
            </a>
-          </p>
+          
+		  <form id="searchForm" action="javascript:search();" style="margin-left:820px; margin-top:-45px;">
+	<div class="input-group">
+      <button id="go" class="btn btn-danger" style = "width:125px; height:30px;"  
+              onclick="document.getElementById('searchForm').submit(); return false;">
+      Search Topic</button>
+      <input type="text" id="searchItem" class="form-control" placeholder="Suchbegriff" style="margin-top:0px;">
+   </div>
+</form></p>
+
+		  
           </div>
           <div class="page-header">
           <h2> Set topics for your students! </h2>
@@ -40,7 +52,7 @@
           <div class="row-fluid">
             <ul class="thumbnails">
               <li class="span3">
-                <div class="thumbnail1">
+                <div class="thumbnail1" id="d0">
                 <img style="height:185px" src="<?php echo base_url();?>assests/img/periodic_table.jpg" alt="product name">
                   <div class="widget-footer1">
                     <h3>Periodic Table</h3>
@@ -64,7 +76,7 @@
                 </div> 
               </li>
              <li class="span3">
-                <div class="thumbnail1">
+                <div class="thumbnail1" id="d1">
                   <img style="height:185px" src="<?php echo base_url();?>assests/img/Chemical-Reactions.jpg" alt="product name">
                     <div class="widget-footer1">
                     <h3>Chemical Reactions</h3>
@@ -89,7 +101,7 @@
                 </div> 
               </li>
 			   <li class="span3">
-               <div class="thumbnail1">
+               <div class="thumbnail1" id="d2">
                   <img style="height:185px" src="<?php echo base_url();?>assests/img/mixandcom.jpg" alt="product name">
                   <div class="widget-footer1">
                     <h3>Mixture and Compound</h3>
@@ -116,7 +128,7 @@
                 </div> 
               </li> 
               <li class="span3">
-                <div class="thumbnail1">
+                <div class="thumbnail1" id="d3">
                   <img style="height:185px" src="<?php echo base_url();?>assests/img/melting.jpg" alt="product name">
                   <div class="widget-footer1">
                     <h3>Melting Point</h3>
@@ -144,7 +156,7 @@
             </ul>
             <ul class="thumbnails"> 
             	<li class="span3">
-               <div class="thumbnail1">
+               <div class="thumbnail1" id="d4">
                   <img style="height:185px" src="<?php echo base_url();?>assests/img/solution.jpg" alt="product name">
                   <div class="widget-footer1">
                     <h3>Solutions</h3>
@@ -170,7 +182,7 @@
                 </div> 
                 </li>
                 <li class="span3">
-                <div class="thumbnail1">
+                <div class="thumbnail1" id="d5">
                   <img style="height:185px" src="<?php echo base_url();?>assests/img/boiling.jpg" alt="product name">
                   <div class="widget-footer1">
                     <h3>Boiling Point</h3>
@@ -197,7 +209,7 @@
                 </div> 
                 </li>
                 <li class="span3">
-                <div class="thumbnail1">
+                <div class="thumbnail1" id="d6">
                   <img style="height:185px" src="<?php echo base_url();?>assests/img/exo.jpg" alt="product name">
                   <div class="widget-footer1">
                     <h3>Exothermic and Endothermic</h3>
@@ -235,7 +247,7 @@
 
 				<?php } $i++;?> 
                 <li class="span3">
-                <div class="thumbnail1">
+                <div class=" " id="d<?php echo $i+10; ?>">
                   <img style="height:185px" src="<?php echo base_url();?>assests/img/melting.jpg" alt="product name">
                   <div class="widget-footer1">
                     <h3><?php echo $row -> topic;?></h3>
@@ -269,6 +281,29 @@
             
           </div>
     </div>
+	</div>
+	
+	<script>
+function search() {
+ 
+   var name = document.getElementById("searchForm").elements["searchItem"].value;
+   var pattern = name.toLowerCase();
+   var targetId = "";
+ 
+   var divs = document.getElementsByClassName("widget-footer1");
+   for (var i = 0; i < divs.length; i++) {
+      var para = divs[i].getElementsByTagName("p");
+	  
+      var index = para[0].innerText.toLowerCase().indexOf(pattern);
+      if (index != -1) {
+         targetId = divs[i].parentNode.id;
+		 console.log(targetId);
+         document.getElementById(targetId).scrollIntoView();
+         break;
+      }
+   }  
+}
+</script>
 
     <script type="text/javascript" src="<?php echo base_url('assests/js/jquery.min.js'); ?>"></script>
     <script type="text/javascript" src="<?php echo base_url('assests/js/bootstrap.min.js'); ?>"></script>

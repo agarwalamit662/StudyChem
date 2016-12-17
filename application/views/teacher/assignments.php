@@ -37,8 +37,9 @@
                   <th>Assignment</th>
                   <th>Details</th>
                   <th>Start Date</th>
-				          <th>End Date</th>
-				  
+				  <th>End Date</th>
+				  <th> View Total Submissions </th>
+				  <th> Hide Total Submissions </th>
                 </tr>
         </thead>
         <tbody>
@@ -61,13 +62,74 @@
                 <td> <?php echo $assmsg;?> </td>
                 <td> <?php echo $startdate;?> </td>
 				        <td> <?php echo $lastdate;?> </td>				
-            </tr>
-            
+				<td><form action = "<?php echo site_url('teacher/viewsubmissions/'.$assgname.'/');?>" method = "post">
+					<button id="viewsubmissions"  name = "viewsubmissions" class="btn btn-success btn-small" > View Submissions </button></td>
+						
+				
+				</form></td>
+				
+				<td><form action = "<?php echo site_url('teacher/hidesubmissions/'.$assgname.'/');?>" method = "post">
+					<button id="hidesubmissions"  name = "hidesubmissions" class="btn btn-success btn-small" > Hide Submissions </button></td>
+						
+				
+				</form></td>
+				
+				
+			</tr>
         <?php } ?>
 
         </tbody>
         </table>
         <?php } ?>
+		
+		
+		<?php if(isset($view)){ ?>
+				
+				
+				<?php if($data3 -> num_rows() == 0) { ?>
+        <div class="alert alert-info"> 
+        <p> No student has not uploaded any assignments till now </p>
+        </div>
+        <?php } else {?>
+        <table class="table table-striped table-hover">
+        <thead>
+                <tr>
+                  <th>S.No</th>
+                  <th>Name</th>
+                  <th>Assignment name</th>
+                  <th>Submit Date</th>
+				  
+                </tr>
+        </thead>
+        <tbody>
+        <?php
+        $j=1;
+        foreach($data3 -> result() as $row) { 
+      			$assgname = $row -> assgname;
+            $student = $row -> student;
+            $this->db->where('email',$student);
+			$r = $this -> db -> get('student');
+            $stu = $r->row();
+            $stuname = $stu -> name;
+            
+			$subdate = $row -> subdate;
+            
+            ?>
+            
+            <tr class="info">
+                 <td><?php echo $j; $j++;?> </td>
+				<td><?php echo $stuname ?> </td>
+				<td><a href="<?php echo site_url('teacher/download1/'.$assgname.'/'.$student.'/');?>" >  <?php echo $assgname;?> </a></td>
+				<td><?php echo $subdate ?></td>
+				
+			</tr>
+			
+			<?php } ?>
+
+        </tbody>
+        </table>
+        <?php } ?>
+            <?php } ?>
 		
 		<?php if(isset($title)) { ?>
         <div class="alert alert-success"> 
@@ -90,7 +152,7 @@
           <h3>  Add New Assignments </h3>
         </div>
 		<div class="row-fluid">
-       <form class="form-horizontal form-signin-signup" action="<?php echo base_url();?>teacher/do_upload" method="post" enctype="multipart/form-data">
+		<form class="form-horizontal form-signin-signup" action="<?php echo base_url();?>teacher/do_upload" method="post" enctype="multipart/form-data">
         <input type="text" name="assgname" class="input-medium search-query" placeholder="Name of the assignment">
 		<input type="text" name="assmsg" class="input-medium search-query" placeholder="About the assignment">
 		<div>
@@ -118,6 +180,9 @@
 		<li><?php echo $item;?>: <?php echo $title1?><?php echo $value;?></li>
 		<?php endforeach; ?>
 		</ul>	
+		
+		
+		  
 
    
 
@@ -125,4 +190,7 @@
 <script type="text/javascript" src="<?php echo base_url('assests/js/jquery.min.js'); ?>"></script>
     <script type="text/javascript" src="<?php echo base_url('assests/js/bootstrap.min.js'); ?>"></script>
     <script type="text/javascript" src="<?php echo base_url('assests/js/boot-business.js'); ?>"></script>
-       
+	 <script src="<?php echo base_url();?>assests/js/modernizr.custom.js"></script>
+  </body>
+  
+</html>  

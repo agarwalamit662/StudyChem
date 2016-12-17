@@ -28,15 +28,21 @@ class Class9 extends CI_Controller {
         $topics = $topics -> row();
         $data1['title'] = $topics -> topic;
         $data1['theory'] = $topics -> theory;
+        $notify = array('student' => $student,
+        				'teacher' => $teacher,
+        				'topic' => $topics -> topic);
+        $this -> db -> insert('notification',$notify);
+        $this -> db -> where('teacher',$teacher);
+        
         $this -> load -> view('header');
         $this -> load -> view('topic',$data1);
-
+        
 	}
 	public function index()
 	{
 		$this->output->set_header("Cache-Control: no-store, no-cache, must-revalidate, no-transform, max-age=0, post-check=0, pre-check=0");
 $this->output->set_header("Pragma: no-cache"); 
-	
+		$student = $this -> session -> userdata('email');
 		$this -> load -> model('studentmodel');
 		$email = $this -> studentmodel -> getTeacher();
 		if($email == "default") 
@@ -49,6 +55,9 @@ $this->output->set_header("Pragma: no-cache");
 			$topic['solution'] = 1;
 			$topic['boiling'] = 1;
 			$topic['exothermic'] = 1;
+			
+			$student = "xxx";
+			$topic['student'] = $student;
 		}
 		else 
 		{
@@ -67,6 +76,7 @@ $this->output->set_header("Pragma: no-cache");
 			$topic['solution'] = $row -> solution;
 			$topic['boiling'] = $row -> boiling;
 			$topic['exothermic'] = $row -> exothermic;
+			$topic['student']= $student;
 		}
 		$this -> load -> view('header');
 		$this-> load-> view('class9',$topic);

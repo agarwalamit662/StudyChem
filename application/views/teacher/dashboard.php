@@ -55,7 +55,7 @@
                 <td> <?php echo $name;?></a></td>
                 <td> <?php echo $class;?> </td>
                 <td> <?php echo $email;?> </td>
-				<td> <form class="form-horizontal form-signin-signup" action="<?php echo base_url();?>teacher/viewStudent" method="post" enctype="multipart/form-data">
+				<td> <form class="form-horizontal form-signin-signup" action="<?php echo site_url('teacher/viewStudent/'.$email.'/');?>" method="post" enctype="multipart/form-data">
 						<button name = "upload" class="btn btn-primary btn-large" id = "upload" type="submit" value="upload">View Profile</button>
 						<input type="hidden" name="stdemail" value="<?php echo $email;?> ">
 						</form>

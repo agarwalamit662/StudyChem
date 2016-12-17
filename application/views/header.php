@@ -53,7 +53,7 @@
                 <?php if($this->session->userdata("roleid")==2) { ?>
                   <li><a href="<?php echo base_url();?>teacher/dashboard">Dashboard</a></li>
                   <?php } else {?>
-                  <li><a href="#">Dashboard</a></li>
+                  <li><a href="<?php echo base_url();?>student/viewself">Dashboard</a></li>
                   <?php } ?>
                   <?php if($this->session->userdata("roleid")==2) { ?>
                   <li><a href="<?php echo base_url();?>teacher/timeline">News Feed</a></li>
@@ -73,7 +73,7 @@
                   <li><a href="<?php echo base_url();?>teacher/quiz">Quizzes</a></li>
                   <?php } else if($this->session->userdata("roleid")==1) { $qsn =1; ?>
 				  
-				  <li><a href="<?php echo site_url('student/quiz/'.$qsn.'/');?>">Quizzes</a></li> <?php } ?>
+				  <li><a href="<?php echo site_url('student/viewquiz/');?>">Quizzes</a></li> <?php } ?>
 				  
 				  <?php if($this->session->userdata("roleid")==2) { ?>
                   <li><a href="<?php echo base_url();?>teacher/assignments">Assignments</a></li>
@@ -88,9 +88,101 @@
                   <li><a href="<?php echo base_url();?>home/logout">Log out</a></li>
 
                   </ul>
-                </li> <?php } else {?>
+                </li> <?php } ?>
+					
+				
+				
+				<?php if($this->session->userdata("roleid")==2) { ?>
+                <li class="dropdown">
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown">Notification<b class="caret"></b></a>                   
+                  <ul class="dropdown-menu">
+                    <?php 
+                    $this -> db -> where('teacher',$this -> session -> userdata('email'));
+                    $data = $this -> db -> get('notification');
+
+                    foreach($data -> result() as $row) {
+                      $student = $row -> student;
+                      $this -> db -> where('email',$student);
+                      $x = $this -> db -> get('student');
+                      $x = $x -> row();
+                      $name = $x -> name;
+                      ?>
+                      <li><a href="<?php echo base_url();?>teacher/deleteNotification/<?php echo $row -> id;?>/"> <?php echo $name;?> has viewed <?php echo $row -> topic;?></a> </li>
+                    <?php }
+                    ?>
+					<?php 
+                    $this -> db -> where('teacher',$this -> session -> userdata('email'));
+                    $data1 = $this -> db -> get('submitnot');
+
+                    foreach($data1 -> result() as $row) {
+                      $student = $row -> student;
+                      $this -> db -> where('email',$student);
+                      $x = $this -> db -> get('student');
+                      $x = $x -> row();
+                      $name = $x -> name;
+					  $email = $x -> email;
+					  $assgname= $row -> assgname;
+                      ?>
+                      <li><a href="<?php echo base_url();?>teacher/deleteSubNotification/<?php echo $row -> id;?>/<?php echo $email;?>"> <?php echo $name;?> has submitted <?php echo $row -> assgname;?></a> </li>
+                    <?php }
+                    ?>
+					
+                  </ul>
+                </li>
+                <?php } ?>
+				
+				
+				<?php if($this->session->userdata("roleid")==1) { ?>
+                <li class="dropdown">
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown">Notification<b class="caret"></b></a>                   
+                  <ul class="dropdown-menu">
+                    <?php 
+                    $this -> db -> where('student',$this -> session -> userdata('email'));
+                    $data = $this -> db -> get('uploadnot');
+
+                    foreach($data -> result() as $row) {
+                      $teacher = $row -> teacher;
+                      $this -> db -> where('email',$teacher);
+                      $x = $this -> db -> get('student');
+                      $x = $x -> row();
+                      $name = $x -> name;
+					  $assgname= $row -> assgname;
+                      ?>
+                      <li><a href="<?php echo base_url();?>student/deleteUploadNotification/<?php echo $row -> id;?>/<?php echo $email;?>"> <?php echo $name;?> has uploaded assignment "<?php echo $assgname;?>"</a> </li>
+                    <?php }
+                    ?>
+					<?php 
+                    $this -> db -> where('student',$this -> session -> userdata('email'));
+                    $data = $this -> db -> get('topicupload');
+					
+					
+                    foreach($data -> result() as $row) {
+                      $teacher = $row -> teacher;
+                      $this -> db -> where('email',$teacher);
+                      $x = $this -> db -> get('student');
+                      $x = $x -> row();
+                      $name = $x -> name;
+					  $id= $row -> id1;
+					  $idmain= $row -> id;
+					  $this -> db -> where('id',$idmain);
+					  $result = $this-> db->get('topic');
+					  $topic  = $result->row()->topic;
+                      ?>
+                      <li><a href="<?php echo base_url();?>student/deleteTopicNotification/<?php echo $row -> id1;?>/<?php echo $email;?>"> <?php echo $name;?> has uploaded topic "<?php echo $topic;?>"</a> </li>
+                    <?php }
+                    ?>
+					
+                  </ul>
+                </li>
+                <?php } else if($this -> session -> userdata('isLoggedIn') == FALSE)   {?>
 
                 <li><a href="<?php echo base_url();?>home/login">Log in</a></li> <?php } ?>
+				
+				
+				
+				
+				
+				
               </ul>
             </div>
           </div>

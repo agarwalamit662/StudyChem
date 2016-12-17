@@ -23,6 +23,8 @@
 
 <div class="content">
  <div class="container">
+ 
+ 
 <table  id="xpandables" align="center" bgcolor="#E8E8E8" cellpadding="0px" cellspacing="0px" border="0px">
              
   <tr>
@@ -33,7 +35,7 @@
   <td>
   <div><table id="tabtable" border="0px" cellpadding="0px" cellspacing="0px" width="100%"><tr><td id="lcurve" width="21px" height="145px"></td><td id="mcurve" rowspan="2"><div id="ddtabs2" class="glowingtabs"><ul style="margin-left:10px"class="widget-footer"><li class="current"><a href="<?php echo base_url();?>class9/periodic_table"><span><div id="tabspan" ><img id="tabimg" src="<?php echo base_url();?>assests/img/theory.png" alt=""/></div><div id="tab_name" >Theory&nbsp;</div></span></a></li><li class=""><a href="<?php echo base_url();?>class9/periodic_procedure"><span><div id="tabspan" ><img id="tabimg" src="<?php echo base_url();?>assests/img/content_2.png" alt=""/></div><div id="tab_name" >Procedure&nbsp;</div></span></a></li><li class=""><a href="<?php echo base_url();?>class9/periodic_simulation"><span><div id="tabspan" ><img id="tabimg" src="<?php echo base_url();?>assests/img/content_4.png" alt=""/></div><div id="tab_name" >Simulator&nbsp;</div></span></a></li><li class=""><a href="?sub=75&brch=12&sim=94&cnt=167"></tr></table>
 <div class = "row"> 
-<div class ="span10 offset1">
+<div class ="span10 offset1" >
 Mendeleev discovered that on arranging in the increasing order of atomic mass 
 elements with similar chemical properties occur periodically.Mendeleev formulated a periodic law which states that 
 The properties of elements are the periodic function of their atomic masses. </p>
@@ -172,6 +174,30 @@ These groups correspond to the filling of the atomic d-orbital subshell of the s
 </div>
 </div>
 </div>
+
+	<script>
+function search() {
+ 
+   var name = document.getElementById("searchForm").elements["searchItem"].value;
+   var pattern = name.toLowerCase();
+   var targetId = "";
+ 
+   var divs = document.getElementsByClassName("widget-footer1");
+   for (var i = 0; i < divs.length; i++) {
+      var para = divs[i].getElementsByTagName("p");
+	  
+      var index = para[0].innerText.toLowerCase().indexOf(pattern);
+      if (index != -1) {
+         targetId = divs[i].parentNode.id;
+		 console.log(targetId);
+         document.getElementById(targetId).scrollIntoView();
+         break;
+      }
+   }  
+}
+</script>
 <script type="text/javascript" src="<?php echo base_url('assests/js/jquery.min.js'); ?>"></script>
     <script type="text/javascript" src="<?php echo base_url('assests/js/bootstrap.min.js'); ?>"></script>
     <script type="text/javascript" src="<?php echo base_url('assests/js/boot-business.js'); ?>"></script>
+</body>
+</head>

@@ -17,6 +17,10 @@
     <link href="<?php echo base_url('assests/css/font-awesome-ie7.css'); ?> "rel="stylesheet">
     <!-- Bootbusiness theme -->
     <link href="<?php echo base_url('assests/css/boot-business.css');?>" rel="stylesheet">
+	<script type="text/javascript" src="<?php echo base_url('assests/js/jquery.min.js'); ?>"></script>
+    <script type="text/javascript" src="<?php echo base_url('assests/js/bootstrap.min.js'); ?>"></script>
+    <script type="text/javascript" src="<?php echo base_url('assests/js/boot-business.js'); ?>"></script>
+
   </head>
   <body>
     <!-- Start: HEADER -->
@@ -163,8 +167,6 @@
           </div>
     </div>
 
-    <script type="text/javascript" src="<?php echo base_url('assests/js/jquery.min.js'); ?>"></script>
-    <script type="text/javascript" src="<?php echo base_url('assests/js/bootstrap.min.js'); ?>"></script>
-    <script type="text/javascript" src="<?php echo base_url('assests/js/boot-business.js'); ?>"></script>
+    	
   </body>
 </html>

@@ -66,13 +66,47 @@ $this->output->set_header("Pragma: no-cache");
 		$this -> db -> where('id',$id);
 		$array = array('show' => 0);
 		$this -> db -> update('topic',$array);
+		$teach = $this -> session -> userdata('email');
+		//echo $teach;
+		$this -> db -> where('teacher',$teach);
+		$data = $this -> db -> get('teacherclass');
+		//echo $data->num_rows();
+		foreach($data->result() as $row){
+				
+				$student = $row -> student;
+				//$this -> db -> where('id',$id);
+				//$topics = $this -> db -> get('upload');
+				//$topics = $topics -> row();
+				$notify = array(
+        				'teacher' => $teach,
+						'student' => $student,
+        				'id' => $id);
+					$this -> db -> delete('topicupload',$notify);}
 		$this -> class9();
 	}
 	public function showTopic($id)
 	{
 		$this -> db -> where('id',$id);
+		
 		$array = array('show' => 1);
 		$this -> db -> update('topic',$array);
+		
+		$teach = $this -> session -> userdata('email');
+		//echo $teach;
+		$this -> db -> where('teacher',$teach);
+		$data = $this -> db -> get('teacherclass');
+		//echo $data->num_rows();
+		foreach($data->result() as $row){
+				
+				$student = $row -> student;
+				//$topics = $this -> db -> get('upload');
+				//$topics = $topics -> row();
+				$notify = array(
+        				'teacher' => $teach,
+						'student' => $student,
+        				'id' => $id);
+					$this -> db -> insert('topicupload',$notify);}
+		
 		$this -> class9();
 	}
 
@@ -169,6 +203,20 @@ $this->output->set_header("Pragma: no-cache");
 		//$this -> load -> view('teacher/class9');
 
 	}
+	public function deleteNotification($id)
+	{
+		$this -> db -> where('id',$id);
+		$this -> db -> delete('notification');
+		redirect('teacher');
+	}
+	public function deleteSubNotification($id,$email)
+	{
+		$this -> db -> where('id',$id);
+		$this -> db -> delete('submitnot');
+		$this->viewStudent($email);
+		//redirect('teacher');
+	}
+
 	public function attendance() 
 	{
 		$this->output->set_header("Cache-Control: no-store, no-cache, must-revalidate, no-transform, max-age=0, post-check=0, pre-check=0");
@@ -283,7 +331,26 @@ $this->output->set_header("Pragma: no-cache");
 						'quiznumber' => $quiznumber
 						
 						);
-		$this->db->insert('quiz_table', $array);}
+		$this->db->insert('quiz_table', $array);
+		
+		$this->db->where('teacher',$email);
+		$result1= $this->db->get('teacherclass');
+		
+		$this->db->where('teacher',$email);
+		$this->db->where('quiznumber',$quiznumber);
+		$result2= $this->db->get('quiz_table');
+		
+		foreach($result1 -> result() as $row)
+		{
+		
+		$array  = array('student' => $row -> student,
+						'quizid' => $result2->row()->quizid,
+						'time_left' => $duration
+						);
+		$this->db->insert('timer', $array);				
+		}
+		
+		}
 
 		else if($count > 0){
 		$array  = array('teacher' => $email, 'quizname' => $quizname,
@@ -296,18 +363,38 @@ $this->output->set_header("Pragma: no-cache");
 						'quiznumber' => $quiznumber
 						
 						);
-		$this->db->update('quiz_table', $array);}
+		$this->db->update('quiz_table', $array);
 		$quiz['title'] = "Quiz Number";
 		$quiz['quizno'] = $quiznumber;
 		$quiz['title1'] = "successfully added";
 		
+		$this->db->where('teacher',$email);
+		$result1= $this->db->get('teacherclass');
+		
+		$this->db->where('teacher',$email);
+		$this->db->where('quiznumber',$quiznumber);
+		$result2= $this->db->get('quiz_table');
+		
+		foreach($result1 -> result() as $row)
+		{
+		
+		$array  = array('student' => $row -> student,
+						'quizid' => $result2->row()->quizid,
+						'time_left' => $duration
+						);
+		$this->db->update('timer', $array);				
 		}
+		
+		}}
 
 		
 		$email = $this -> session -> userdata('email');
 		$this -> db -> where('teacher',$email);
 		$data = $this -> db -> get('quiz_table');
 		$quiz['data'] = $data;
+		
+		
+		
 		$this -> load -> view('header');
 		$this -> load -> view('teacher/quiz',$quiz);
 	}
@@ -359,9 +446,9 @@ $this->output->set_header("Pragma: no-cache");
 			//$this -> load -> view('header');
 			//$this->load->view("settings", $Error);
 		}
-		else if( $cans != $opta && $cans != $optb && $cans != $optc && $cans != $optd ){
+		else if( $cans != "a" && $cans != "b" && $cans != "b" && $cans != "d" ){
 		
-			$quiz["Invalid1"] = "Invalid Ans. Please Choose either from Option A,B,C or D";
+			$quiz["Invalid1"] = "Invalid options. Please Choose either from Option a,b,c,d";
 		}
 		else{
 		$query = $this->db->get_where('problem', array('ques_num' => $qsnnum, 'quizid' => $quiz_id , 'teacher' => $email)); 
@@ -450,6 +537,29 @@ $this->output->set_header("Pragma: no-cache");
 		$this -> db -> where('quizid',$quizid);
 		
 		$this -> db -> delete('problem',$array);
+		
+		$email = $this -> session -> userdata('email');
+		//$this -> db -> where('teacher',$email);
+		
+		
+		$this->db->where('teacher',$email);
+		$result1= $this->db->get('teacherclass');
+		
+		$this->db->where('teacher',$email);
+		$this->db->where('quiznumber',$quiznum);
+		$result2= $this->db->get('quiz_table');
+		
+		foreach($result1 -> result() as $row)
+		{
+		
+		$array1  = array('student' => $row -> student,
+						'quizid' => $result2->row()->quizid,
+						'time_left' => $result2->row()->duration
+						);
+		$this->db->delete('timer', $array1);				
+		}
+		
+		
 		
 		$email = $this -> session -> userdata('email');
 		$this -> db -> where('teacher',$email);
@@ -613,9 +723,9 @@ $this->output->set_header("Pragma: no-cache");
 			//$this -> load -> view('header');
 			//$this->load->view("settings", $Error);
 		}
-		else if( $cans != $opta && $cans != $optb && $cans != $optc && $cans != $optd ){
+		else if( $cans != "a" && $cans != "b" && $cans != "c" && $cans != "d" ){
 		
-			$quiz["Invalid1"] = "Invalid Ans. Please Choose either from Option A,B,C or D";
+			$quiz["Invalid1"] = "Invalid Option. Please Choose either from Option a,b,c or d";
 		}
 		else {
 		$this -> db -> where('teacher',$email);
@@ -658,13 +768,14 @@ $this->output->set_header("Pragma: no-cache");
 	
 	}
 	
-	public function viewStudent()
+	public function viewStudent($email)
 	{
 		$this->output->set_header("Cache-Control: no-store, no-cache, must-revalidate, no-transform, max-age=0, post-check=0, pre-check=0");
 		$this->output->set_header("Pragma: no-cache");
 		
 		$this -> load -> view('header');
-		$stdemail =  $_POST['stdemail'];
+		$stdemail  = $email;
+		//$stdemail =  $_POST['stdemail'];
 		$senddata['name'] = $stdemail;
 		
 		$this->db->where('email',$stdemail);
@@ -692,6 +803,11 @@ $this->output->set_header("Pragma: no-cache");
 		
 		$query = $this->db->get('stuhasattend'); 
 		
+		
+		$this->db->where('student',$stdemail);
+		$results = $this->db->get('results');
+		//$senddata['results'] = $results;
+		$senddata['stdemail'] = $stdemail;
 		
 		//$this->db->where('student',$stdemail);
 		//$this->db->select('Monthname(date1) as month2, COUNT(Month(date1)) as total2');
@@ -927,6 +1043,22 @@ $this->output->set_header("Pragma: no-cache");
 		
 				$this -> db -> insert('upload',$array);
 				$sendData['title'] = "Assignment is successfully added into your class!";
+				
+				$teach = $this -> session -> userdata('email');
+				//echo $teach;
+				$this -> db -> where('teacher',$teach);
+				$data = $this -> db -> get('teacherclass');
+				//echo $data->num_rows();
+				foreach($data->result() as $row){
+				
+				$student = $row -> student;
+				//$topics = $this -> db -> get('upload');
+				//$topics = $topics -> row();
+				$notify = array(
+        				'teacher' => $teach,
+						'student' => $student,
+        				'assgname' => $assgname);
+					$this -> db -> insert('uploadnot',$notify);}
 			}
 		}
 		$assgname = $_POST['assgname'];
@@ -951,7 +1083,45 @@ $this->output->set_header("Pragma: no-cache");
 		$sendData['data'] = $data;	
 		$this -> load -> view('teacher/assignments',$sendData);
 	}
-
+	public function viewsubmissions($assgname)
+	{
+		$this -> output -> set_header('Last-Modified:' . gmdate('D, d M Y H:i:s') . 'GMT');
+		$this -> output -> set_header('Cache-Control: no-store, no-cache, must-revalidate');
+		$this -> output -> set_header('Cache-Control: post-check=0, pre-check=0', false);
+		$this -> output -> set_header('Pragma: no-cache');
+		
+		$teacher = $this -> session -> userdata('email');
+		$this -> db -> where('assgname',$assgname);
+		$this -> db -> where('teacher',$teacher);
+		$data = $this -> db -> get('submission');
+		$sendData['data3'] = $data;	
+		$sendData['view'] = 1;
+		
+		$email = $this -> session -> userdata('email');
+		$this -> db -> where('teacher',$email);
+		$data1 = $this -> db -> get('addassignment');
+		$sendData['data'] = $data1;
+		
+		$this -> load -> view('teacher/assignments',$sendData);
+		$this-> load ->view('header');
+	}
+	
+	public function hidesubmissions($assgname)
+	{
+		$this -> output -> set_header('Last-Modified:' . gmdate('D, d M Y H:i:s') . 'GMT');
+		$this -> output -> set_header('Cache-Control: no-store, no-cache, must-revalidate');
+		$this -> output -> set_header('Cache-Control: post-check=0, pre-check=0', false);
+		$this -> output -> set_header('Pragma: no-cache');
+		
+		
+		$email = $this -> session -> userdata('email');
+		$this -> db -> where('teacher',$email);
+		$data1 = $this -> db -> get('addassignment');
+		$sendData['data'] = $data1;
+		
+		$this -> load -> view('teacher/assignments',$sendData);
+		$this-> load ->view('header');
+	}
 	public function download($assgname)
 	{
 		$this -> output -> set_header('Last-Modified:' . gmdate('D, d M Y H:i:s') . 'GMT');
@@ -977,7 +1147,47 @@ $this->output->set_header("Pragma: no-cache");
 		}
 	
 	}
+	public function download1($assgname, $student)
+	{
+		$this -> output -> set_header('Last-Modified:' . gmdate('D, d M Y H:i:s') . 'GMT');
+		$this -> output -> set_header('Cache-Control: no-store, no-cache, must-revalidate');
+		$this -> output -> set_header('Cache-Control: post-check=0, pre-check=0', false);
+		$this -> output -> set_header('Pragma: no-cache');
+		
+		if ($this -> session -> userdata('isLoggedIn') && $this -> session -> userdata('roleid') == 2) {
+			$this -> load -> model('studentmodel');
+			$this -> db -> where('assgname',$assgname);
+			$this -> db -> where('student',$student);
+			$data = $this -> db -> get('submission');
+			$data = $data -> row();
+			$filePath = $data -> path;
+			
+			$getFile = explode("/", $filePath);
+			$name = end($getFile);
+			$this -> load -> helper('download');
+			$data = file_get_contents($filePath);
+			force_download($name, $data);		
+		} 
+		if ($this -> session -> userdata('isLoggedIn') && $this -> session -> userdata('roleid') == 1) {
+			$this -> load -> model('studentmodel');
+			$this -> db -> where('assgname',$assgname);
+			$this->db ->where('student' , $student);
+			$data = $this -> db -> get('submission');
+			$data = $data -> row();
+			$filePath = $data -> path;
+			
+			$getFile = explode("/", $filePath);
+			$name = end($getFile);
+			$this -> load -> helper('download');
+			$data = file_get_contents($filePath);
+			force_download($name, $data);		
+		}
+		else {
+			$this -> session -> sess_destroy();
+			redirect(base_url() . "Home/Login");
+		}
 	
+	}
 	
 	
 	
